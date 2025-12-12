@@ -33,16 +33,19 @@ jobs:
   #     - run: make lint-install
   #     - run: make lint
 
-  test:
+  lint-test:
     runs-on: ubuntu-latest
     needs: validate-tag
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-go@v4
         with:
           go-version: "1.22"
           cache: true
+      - run: make lint-install
+      - run: make lint
       - run: make test
 
   docker:
