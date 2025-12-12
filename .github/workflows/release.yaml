@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build image
-        run: docker build -t mauricio/hello-world:${{ github.ref_name }} .
+        run: docker build -t mauriciocodeguez/coolifytest:${{ github.ref_name }} .
 
       - name: Push image
-        run: docker push mauricio/hello-world:${{ github.ref_name }}
+        run: docker push mauriciocodeguez/coolifytest:${{ github.ref_name }}
