@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
+
+      # - name: Install Linter
+      #   run: make lint-install
+
+      # - name: Run Lint
+      #   run: make lint
+
+      - name: Run Tests
+        run: make test

@@ -15,6 +15,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Extract tag
+        id: vars
+        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Validate SemVer
+        run: |
+          TAG=${TAG#v}
+          if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?$ ]]; then
+            echo "❌ Invalid SemVer tag. Use vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-prerelease"
+            exit 1
+          fi
+        env:
+          TAG: ${{ env.TAG }}
+
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
+
+      # - name: Install Linter
+      #   run: make lint-install
+
+      # - name: Run Lint
+      #   run: make lint
+
+      - name: Run Tests
+        run: make test
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -26,3 +54,7 @@ jobs:
 
       - name: Push image
         run: docker push mauriciocodeguez/coolifytest:${{ github.ref_name }}
+
+      # - name: Trigger Coolify Deploy (Tag)
+      #   run: |
+      #     curl -X POST "https://YOUR-COOLIFY-DOMAIN/api/v1/webhooks/deploy/${{ secrets.COOLIFY_WEBHOOK_TOKEN }}?tag=${{ env.TAG }}"
