@@ -34,10 +34,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build latest image
-        run: docker build --build-arg VERSION=latest -t ${{env.DOCKER_IMAGE_NAME}}:latest .
+        run: docker build --build-arg VERSION=latest -t ${{vars.DOCKER_IMAGE_NAME}}:latest .
 
       - name: Push latest image
-        run: docker push ${{env.DOCKER_IMAGE_NAME}}:latest
+        run: docker push ${{vars.DOCKER_IMAGE_NAME}}:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,5 +46,5 @@ jobs:
     steps:
       - name: Trigger Coolify Deploy Dev
         run: |
-          curl --location '${{env.COOLIFY_URL}}/api/v1/deploy?uuid=${{env.COOLIFY_RESOURCE_ID_DEV}}&force=false' \
+          curl --location '${{vars.COOLIFY_URL}}/api/v1/deploy?uuid=${{vars.COOLIFY_RESOURCE_ID_DEV}}&force=false' \
           --header 'Authorization: Bearer ${{ secrets.COOLIFY_API_BEARER_TOKEN }}'
